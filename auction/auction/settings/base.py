@@ -1,8 +1,7 @@
 """Common settings and globals."""
-
+import os
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
-from datetime import timedelta
 from celery.schedules import crontab
 
 
@@ -45,12 +44,12 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('db_name'),
+        'USER': os.environ.get('db_user'),
+        'PASSWORD': os.environ.get('db_pwd'),
+        'HOST': os.environ.get('db_host'),
+        'PORT': os.environ.get('db_port'),
     }
 }
 ########## END DATABASE CONFIGURATION
@@ -265,11 +264,13 @@ CACHES = {
     }
 }
 
+REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
 
-BROKER_URL = 'amqp://'
-CELERY_ACCEPT_CONTENT = ['json', 'pickle']
-RABBIT_URL = 'amqp://guest:guest@localhost:5672//'
-RABBIT_HOST = 'localhost'
+BROKER_URL = 'redis://{}:6379/1'.format(REDIS_HOST)
+CELERY_RESULT_BACKEND = 'redis://{}:6379/1'.format(REDIS_HOST)
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_SEND_TASK_ERROR_EMAILS = True
+
 CELERY_ENABLE_UTC = True
 
 CELERYBEAT_SCHEDULE = {

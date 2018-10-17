@@ -4,6 +4,7 @@ django-braces==1.4.0
 django-model-utils==2.0.3
 logutils==0.3.3
 psycopg2==2.7.5
+redis==2.10.6
 Pillow==2.6.1
 django-multiupload==0.3
 django-endless-pagination==2.0
